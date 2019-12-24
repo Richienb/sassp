@@ -1,13 +1,25 @@
 import test from "ava"
-import theModule from "."
+import fs from "fs-extra"
+import sassp from "."
 
-test("main", (t) => {
-    t.throws(() => {
-        theModule(123)
-    }, {
-        instanceOf: TypeError,
-        message: "Expected a string, got number",
-    })
+const css = `body {
+  background-color: white;
+}`
+const sourcemapped = `body {
+  background-color: white;
+}
 
-    t.is(theModule("unicorns"), "unicorns & rainbows")
+/*# sourceMappingURL=index.css.map */`
+const mappings = "AAAA;EACI"
+
+test("main", async (t) => {
+    t.is((await sassp.render({ file: "test/index.sass" })).css.toString(), css)
+
+    await fs.remove("test/index.css")
+    await fs.remove("test/index.css.map")
+
+    await sassp.renderFile({ file: "test/index.sass", outFile: "test/index.css", sourceMap: true })
+
+    t.is(await fs.readFile("test/index.css", "utf8"), sourcemapped)
+    t.is((await fs.readJSON("test/index.css.map")).mappings, mappings)
 })

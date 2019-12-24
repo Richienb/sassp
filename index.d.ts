@@ -1,14 +1,17 @@
-/**
- * My awesome module.
- * @param input Lorem ipsum.
- * @param postfix Lorem ipsum.
- * @example
- * ```
- * const theModule = require("the-module");
- * theModule("unicorns");
- * //=> 'unicorns & rainbows'
- * ```
-*/
-declare function theModule(input: string, { postfix }: { postfix?: string }): string;
+import { renderSync, Options, Result, SassException } from "sass"
 
-export = theModule;
+declare type callbackFn = (exception: SassException, result: Result) => void
+
+declare const sassp: {
+    render(options: Options): Promise<Result>
+    render(options: Options, callback: callbackFn): void
+
+    renderSync: typeof renderSync
+
+    renderFile(options: Options): Promise<Result>
+    renderFile(options: Options, callback: callbackFn): void
+
+    renderFileSync(options: Options): Result
+}
+
+export = sassp;

@@ -1,41 +1,53 @@
-# The module [![Travis CI Build Status](https://img.shields.io/travis/com/Richienb/the-module/master.svg?style=for-the-badge)](https://travis-ci.com/Richienb/the-module)
+# Sassp [![Travis CI Build Status](https://img.shields.io/travis/com/Richienb/sassp/master.svg?style=for-the-badge)](https://travis-ci.com/Richienb/sassp)
 
-My awesome module.
+Sass with promise support and extras.
 
-[![NPM Badge](https://nodei.co/npm/the-module.png)](https://npmjs.com/package/the-module)
+[![NPM Badge](https://nodei.co/npm/sassp.png)](https://npmjs.com/package/sassp)
 
 ## Install
 
 ```sh
-npm install the-module
+npm install sassp
 ```
 
 ## Usage
 
 ```js
-const theModule = require("the-module");
+const sass = require("sassp");
 
-theModule("unicorns");
-//=> 'unicorns & rainbows'
+(async () => {
+    const { css } = await sass.render({ file: "index.sass" });
+    console.log(css.toString());
+    //=> `body { background-color: white; }`
+
+    await sass.renderFile({ file: "index.sass", outFile: "index.css", sourceMap: true });
+})();
 ```
 
 ## API
 
-### theModule(input, options?)
-
-#### input
-
-Type: `string`
-
-Lorem ipsum.
+### render(options, callback?)
 
 #### options
 
 Type: `object`
 
-##### postfix
+See https://github.com/sass/dart-sass#javascript-api.
 
-Type: `string`\
-Default: `rainbows`
+#### callback
 
-Lorem ipsum.
+Type: `function`
+
+Optional callback. If not specified, the function will return a promise. See https://github.com/sass/dart-sass#javascript-api.
+
+### renderSync(options)
+
+See https://github.com/sass/dart-sass#javascript-api
+
+### renderFile(options, callback?)
+
+Same as `render` but automatically writes output to `outFile` and source map to `sourceMap` if specified.
+
+### renderFileSync(options, callback?)
+
+Same as `renderFile` but syncronous.
